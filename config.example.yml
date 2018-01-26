@@ -1,0 +1,103 @@
+port: 443
+
+#Log level 2 to see whats going on
+log_level: 2
+
+#This is your Database config:
+db_host: 'localhost'
+db_user: 'root'
+db_pass: 'pass'
+db_database: 'siri'
+
+#Programm options
+#1. Auto Key Ban -> When a key cannot create more assistants then it is marked as banned,
+# and wont be used for creating assistants in apple db. This doesnt imply that the key is banned though :-)
+# Just a precation measure
+# Default = ON , Recommended='ON'
+# Also if this is set to on there is a happy_hour_countdown that when is reached sets the keys unbanned again
+# Defalut 6 hours = 21600 sec
+happy_hour_countdown: 60
+enable_auto_key_ban: 'OFF'
+
+
+#Validation Sesitivity. This is the value that will force the key to be expired due to apple not responding to invalid keys
+#The pholoshopy behind this is that when some Finish speech requests are made and apple doesnt reply back then the server marks the keys as invalid
+#default value 5
+#default value for small servers 5
+#Value of 0 will disable this function
+#recommended for medium sized server 10-15
+#recomended for large servers like paradox 30
+
+expiration_sesitivity: 5
+
+# This allows you to set how long after a key is added until it expires. If you have the regerate_interval set to 3600,
+# then 24 will be an awesome value to use. If this Value is not set, it will default to 20
+hours_till_key_expires: 24
+
+#HOT! THis will force the 4S to regenerate new Validation data every time give Do not use lowe than 15 seconds
+#default response from apple is 90000. Change this to what you please! 3600 (1 Hour) is a good value
+regenerate_interval: 3600 
+
+#With the allow_unknown_clients option, it allows Andriod devices, and any other siri ports to use the server.
+#It is disabled by default, because it also allows DOS attacks
+
+#allow_unknown_clients: true
+
+#For Generating Certs for iPhones. Has 2 hosts, so that you can use guzzoni on a 4S,
+#and your server also using the same instance.
+ca_name: 'SiriProxyCA'
+server1: 'guzzoni.apple.com'
+server2: 'your.siri.proxy.server.com'
+
+#Private or public server. The difference is that public automaticaly sets new clients as valid and private as invalid
+# thus denying access
+private_server: 'OFF'
+
+#In case of private_server is set to 'ON': This automaticaly sets key-donating devices like iPhone 4S/5 as invalid and they
+#must be set to true in database, if private_to_all_devices is 'ON'. Default: 'OFF'
+private_to_all_devices: 'OFF'
+
+#To make a Public server - less public, where the client needs to be in database, make clients_must_be_in_database true.
+#Note: The client will have to delete their com.apple.assistant.plist before they use your server.
+clients_must_be_in_database: false
+
+
+#For your email configuration. Edit to your email address and set send_email to 'ON'.
+#Also plase notice that you have to configure sendmail for you pc if its required
+#It is possible that this email will be delivered to your spam/junk folder.
+#html formated message is default
+#If you want to add multiple email addresses then just seperate them here with commas
+send_email: 'OFF'
+email_from: 'TheThreeLittlePigs@pigs.com'
+email_to: 'youremail'
+email_subject: 'A 4S Key Expired'
+email_message: '<p>Hello, </br> this is an automated message from The Three Little Pigs SiriProxy.
+</br> A 4S key on the database has expired!</p><p>Please do not reply to this message</p>'
+
+plugins:
+    # NOTE: run bundle after changing plugin configurations to update required gems
+
+    - name: 'Example'
+      path: './plugins/siriproxy-example'
+
+    # - name: 'Thermostat'
+    #   git: 'git://github.com/plamoni/SiriProxy-Thermostat.git'
+    #   host: '192.168.2.71'
+
+    # - name: 'Twitter'
+    #   path: './plugins/siriproxy-twitter' # path works just like specifing in gemfile
+    #   consumer_key: "YOUR_KEY"
+    #   consumer_secret: "YOUR_SECRET"
+    #   oauth_token: "YOUR_TOKEN"
+    #   oauth_token_secret: "YOUR_TOKEN_SECRET"
+
+    # Note: Eliza should not be run with other plugins
+    # - name: 'Eliza'
+    #   path: './plugins/siriproxy-eliza' # path works just like specifing in gemfile
+
+    # Below are not actual plugins, just further example of config options
+
+    # - SimplePlugin # simple syntax for plugins that are in rubygems and have no config
+
+    # - name: 'AnotherPlugin'
+    #   git: 'git://github.com/netpro2k/SiriProxy-AnotherPlugin.git' # git works just like specifying in Gemfile
